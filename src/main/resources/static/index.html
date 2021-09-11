@@ -6,23 +6,39 @@
 </head>
 <body>
 <h1>과일/채소 가격 조회</h1>
+<p>검색 가능 목록은 빈값으로 검색</p>
 <div>
-    <label for="category"></label><select id="category">
-        <option value="/products">과일</option>
-        <option value="/items">채소</option>
+    <label for="category"></label><select id="category" onchange="document.getElementById('name').focus();">
+        <option id="products" value="/products">과일</option>
+        <option id="items" value="/items">채소</option>
     </select>
     <label for="name"></label><input type="text" id="name" />
     <button type="button" id="search">검색</button>
 </div>
-<span id="result"></span>
 <script type="text/javascript">
     (function () {
         let httpRequest;
+        let url;
+        let name;
+
         document.getElementById("search").onclick = function () {
-            let url = document.getElementById("category").value;
-            let name = '/' + document.getElementById("name").value;
-            makeRequest(url + name);
+            makeUrl();
         };
+
+        document.addEventListener('keydown', function (e) {
+            if (e.keyCode === 13) {
+                makeUrl();
+            }
+        })
+
+        document.getElementById('name').focus();
+
+        function makeUrl() {
+            url = document.getElementById('category').value;
+            name = '/' + document.getElementById('name').value;
+
+            makeRequest(url + name, 'alert');
+        }
 
         function makeRequest(url) {
             httpRequest = new XMLHttpRequest();
@@ -40,9 +56,14 @@
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === 200) {
                     let response = JSON.parse(httpRequest.responseText);
-                    alert(response.response.price + '원');
+                    if (name === '/') {
+                        alert(response.response);
+                    } else {
+                        alert(response.response.price + '원');
+                    }
                 } else {
-                    alert('존재하지 않는 상품');
+                    let selectText = document.getElementById('category');
+                    alert('존재하지 않는 ' + selectText.options[selectText.selectedIndex].text);
                 }
             }
         }

@@ -1,7 +1,5 @@
 package com.example.demo.errors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +12,6 @@ import static com.example.demo.utils.ApiUtils.error;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private ResponseEntity<ApiResult<?>> newResponse(Throwable throwable, HttpStatus status) {
         return newResponse(throwable.getMessage(), status);
@@ -39,7 +35,7 @@ public class CustomExceptionHandler {
         return newResponse(e, HttpStatus.BAD_REQUEST);
     }
     public ResponseEntity<?> handleGetAccessTokenException(Exception e) {
-        return newResponse(e, HttpStatus.BAD_REQUEST);
+        return newResponse(e, HttpStatus.UNAUTHORIZED);
     }
 
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>과일/채소 가격 조회</h1>
+<div>
+    <label for="category"></label><select id="category">
+        <option value="/products">과일</option>
+        <option value="/items">채소</option>
+    </select>
+    <label for="name"></label><input type="text" id="name" />
+    <button type="button" id="search">검색</button>
+</div>
+<span id="result"></span>
+<script type="text/javascript">
+    (function () {
+        let httpRequest;
+        document.getElementById("search").onclick = function () {
+            let url = document.getElementById("category").value;
+            let name = '/' + document.getElementById("name").value;
+            makeRequest(url + name);
+        };
+
+        function makeRequest(url) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('request 객체 생성 실패');
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents;
+            httpRequest.open('GET',url);
+            httpRequest.send();
+        }
+
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    let response = JSON.parse(httpRequest.responseText);
+                    alert(response.response.price + '원');
+                } else {
+                    alert('존재하지 않는 상품');
+                }
+            }
+        }
+    })();
+</script>
+</body>
+</html>

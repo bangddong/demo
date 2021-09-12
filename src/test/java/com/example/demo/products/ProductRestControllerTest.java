@@ -1,29 +1,36 @@
 package com.example.demo.products;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs
 class ProductRestControllerTest {
 
     private static final Map<Integer, String> productName = new HashMap<>() {{
@@ -46,10 +53,14 @@ class ProductRestControllerTest {
         this.ctx = ctx;
     }
 
+    @Rule
+    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .apply(documentationConfiguration(this.restDocumentation))
                 .alwaysDo(print())
                 .build();
     }
@@ -63,6 +74,7 @@ class ProductRestControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         );
         result.andDo(print())
+                .andDo(document("findAllProducts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.response").isArray())
@@ -79,9 +91,10 @@ class ProductRestControllerTest {
     void findByNameSuccessTest() throws Exception {
         for (int i = 1; i < 5; i++) {
             ResultActions result = mockMvc.perform(
-                    get("/products/" + productName.get(i))
+                    get(new URI("/products/" + productName.get(i)))
             );
             result.andDo(print())
+                    .andDo(document("findByNameProducts"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.success", is(true)))
                     .andExpect(jsonPath("$.response.name").exists())

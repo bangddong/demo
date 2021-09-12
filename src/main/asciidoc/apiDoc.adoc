@@ -1,0 +1,63 @@
+= 과일/채소 가격 API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectnums:
+:sectlinks:
+:sectanchors:
+
+[[api]]
+== 채소목록 조회
+조회 가능한 채소 목록을 조회합니다.
+
+=== REQUEST
+CURL:
+include::{snippets}/findAllItems/curl-request.adoc[]
+REQUEST HTTP EXAMPLE:
+include::{snippets}/findAllItems/http-request.adoc[]
+=== RESPONSE
+RESPONSE HTTP EXAMPLE:
+include::{snippets}/findAllItems/http-response.adoc[]
+
+[[api2]]
+== 채소가격 조회
+채소 가격을 조회합니다. +
+존재하지 않는 채소일경우 404 에러를 리턴합니다.
+
+=== REQUEST
+CURL:
+include::{snippets}/findByNameItem/curl-request.adoc[]
+REQUEST HTTP EXAMPLE:
+include::{snippets}/findByNameItem/http-request.adoc[]
+=== RESPONSE
+RESPONSE HTTP EXAMPLE:
+include::{snippets}/findByNameItem/http-response.adoc[]
+
+[[api3]]
+== 과일목록 조회
+조회 가능한 과 목록을 조회합니다.
+
+=== REQUEST
+CURL:
+include::{snippets}/findAllProducts/curl-request.adoc[]
+REQUEST HTTP EXAMPLE:
+include::{snippets}/findAllProducts/http-request.adoc[]
+=== RESPONSE
+RESPONSE HTTP EXAMPLE:
+include::{snippets}/findAllProducts/http-response.adoc[]
+
+[[api4]]
+== 과일가격 조회
+과일 가격을 조회합니다. +
+존재하지 않는 과일일경우 404 에러를 리턴합니다.
+
+=== REQUEST
+CURL:
+include::{snippets}/findByNameProducts/curl-request.adoc[]
+REQUEST HTTP EXAMPLE:
+include::{snippets}/findByNameProducts/http-request.adoc[]
+=== RESPONSE
+RESPONSE HTTP EXAMPLE:
+include::{snippets}/findByNameProducts/http-response.adoc[]
